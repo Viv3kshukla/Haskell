@@ -1,0 +1,28 @@
+
+
+{-# LANGUAGE DeriveGeneric #-}
+
+import GHC.Generics
+import Data.Text
+
+add :: Int -> Int -> Int
+add x y = x + y
+
+data Person = Person {
+      name :: Text
+    , age :: Int
+} deriving (Generic, Show)
+
+
+
+primes = filterPrime [2..]
+    where filterPrime (p:xs) = p: filterPrime [x | x <- xs , x `mod` p /= 0]
+
+
+-- data Shape = Circle Float Float Float | Rectangle Float Float Float Float
+
+surface :: Shape -> Float
+surface (Circle _ _ r) = pi * r ^ 2
+surface (Rectangle x1 y1 x2 y2) = (abs $ x2 - x1) * (abs $ y2 - y1)
+
+data Shape = Circle Float Float Float | Rectangle Float Float Float Float deriving (Show)

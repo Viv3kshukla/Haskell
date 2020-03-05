@@ -16,12 +16,15 @@ transform = do
 
   let keyValueList = zip keys values
   let mp = Map.fromList keyValueList
-
+  putStrLn $ show (words str)
   let opName = fetchOpName str
+  putStrLn $ "logging out the op name " ++ opName
   let tableName = fetchTableName str
-
+  putStrLn $ "logging out the table name " ++ tableName
   let queryTail = drop 2 (words str)
+  putStrLn $ "logging out the queryTail name " ++ (show queryTail)
   let newStr = unwords $ takeWhile (/= "::") (queryTail)
+  putStrLn $ "logging out the newStr name " ++ (newStr)
   let queryString = getQueryString newStr
   putStrLn $ "logging out the queryString " ++ queryString
   let repCntString = replaceCharCnt '"' 1 queryString
@@ -43,9 +46,9 @@ transform = do
     fetchTableName str = head . tail $ tail  $ dropWhile (/="::") $ words str
 
     getQueryString :: String -> String
-    getQueryString str = let list = tail $ dropWhile (/= "[") (words str)
-                             newList = takeWhile (/= "]") list
-                         in (unwords newList)
+    getQueryString str = let list = tail $ dropWhile (/= '[') (str)
+                             newList = takeWhile (/= ']') list
+                         in (newList)
 
     replaceChar :: Char -> Char -> String -> String
     replaceChar rep with [] = []

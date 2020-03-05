@@ -1,1 +1,1 @@
-findOneE Euler $ where_ := WHERE [ "id" /\ String id ] :: WHERE Euler.PSP
+findOneE Euler $ where_ := WHERE [ "id" /\ String id ] :: WHERE Customer

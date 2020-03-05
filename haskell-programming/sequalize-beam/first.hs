@@ -13,15 +13,26 @@ transform = do
   let values = ["==.","B.val_","B.val_", "\\rec","->", "==.","&&.","","rec"]
   let keyValueList = zip keys values
   let mp = Map.fromList keyValueList
-  let list = map (func mp) (words str)
-  putStrLn $ unwords list
+  let opName = fetchOpName str
+  let tableName = fetchTableName str
+  let queryTail = drop 2 (words str)
+  let newStr = unwords $ takeWhile (/= "::") (queryTail)
+  putStrLn $ newStr
+  let queryList = map (func mp) (words newStr)
+  let finalList = (opName : tableName : queryList)
+  putStrLn $ unwords finalList
   where
+
+    fetchOpName :: String -> String
+    fetchOpName str = head $ words str
+
+    fetchTableName :: String -> String
+    fetchTableName str = head . tail $ tail  $ dropWhile (/="::") $ words str
+
+
     func :: Map.Map String String -> String -> String
     func mp str = case (mp !? str) of
                     Nothing -> str
                     Just _ -> (mp ! str)
 
 
---
---    extractTableName :: String -> String
---    extractTableName str = head . tail $ tail  $ dropWhile (/="::") $ words str

@@ -17,7 +17,22 @@ transform = do
   let mp = Map.fromList keyValueList
   let list = map (func mp) (words str)
   putStrLn $ unwords list
+  let opName = fetchOpName str
+  let tableName = fetchTableName str
+  let fieldCompareMap = getFieldMap str
+  let query = buildQuery opName tableName fieldCompareMap
   where
+
+    fetchOpName :: String -> String
+    fetchOpName str = head $ words str
+
+    fetchTableName :: String -> String
+    fetchTableName str = head . tail $ tail  $ dropWhile (/="::") $ words str
+
+    getFieldMap :: String -> String
+    getFieldMap str =  let query
+
+
     func :: Map.Map String String -> String -> String
     func mp str = case (mp !? str) of
                     Nothing -> str

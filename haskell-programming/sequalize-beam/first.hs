@@ -68,6 +68,7 @@ transform = do
     processAndOr opr [] = []
     processAndOr opr (x:[]) = [x]
     processAndOr opr (x:y:xs)
+      | (last x) == ',' = (x : opr : y : (processAndOr opr xs ))
       | (last y) == ',' = (x : y : opr : (processAndOr opr xs ))
       | (head y) == '[' = (y : (processAndOr x xs ))
       | otherwise = (x : y : processAndOr opr (xs))

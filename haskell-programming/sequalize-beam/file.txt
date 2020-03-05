@@ -1,2 +1,4 @@
-DB.findAll ecDB ( order := [["dateCreated" , "ASC"]]
-    <> where_ := WHERE ["txn_detail_id" /\ String  (nullOrUndefinedToAny (txn.id) "")] :: WHERE Refund)
+DB.findAll EC $ where_ := And
+    [ "merchant_account_id" ==? Int merchantAccountId
+    , "object_reference_id" <-? (String <$> customerIds)
+    ] :: Where Customer

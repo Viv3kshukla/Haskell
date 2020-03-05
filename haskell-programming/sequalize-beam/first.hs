@@ -36,7 +36,7 @@ transform = do
 
 --  let queryList = map (func mp) (words repCntString)
   let queryList = words repCntString
-  putStrLn $ "logging out the finalList " ++ (unwords queryList)
+  putStrLn $ "logging out the finalList " ++ (show queryList)
 
 --  putStrLn $ "logging out the list " ++ (show queryList)
   let newQueryList = processAndOr "And" queryList
@@ -66,9 +66,13 @@ transform = do
     processAndOr opr [] = []
     processAndOr opr (x:[]) = [x]
     processAndOr opr (x:y:xs)
+      | x == "," = (opr : y : (processAndOr opr xs ))
+      | y == "," = (x : opr : (processAndOr opr xs ))
       | (last x) == ',' = (x : opr : y : (processAndOr opr xs ))
       | (last y) == ',' = (x : y : opr : (processAndOr opr xs ))
       | (head y) == '[' = (y : (processAndOr x xs ))
+      | (head y) == ',' = (x : opr : y : (processAndOr opr xs ))
+      | (head x) == ',' = (opr : x : y : (processAndOr opr xs))
       | otherwise = (x : y : processAndOr opr (xs))
 
 

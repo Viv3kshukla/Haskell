@@ -19,7 +19,7 @@ transform = do
   putStrLn $ show (words str)
   let opName = fetchOpName str
 
-  let tableName = fetchTableName str
+  let tableName = fetchTableName $ replaceChar ')' ' ' str
 
   let queryTail = drop 2 (words str)
 
@@ -43,10 +43,8 @@ transform = do
   let finalQueryList = map (func mp) (newQueryList)
   putStrLn $ "logging out the newQueryList " ++ (show finalQueryList)
 --  let finalList = (opName : tableName : "$ \\rec -> " : queryList)
-  let finalList = (opName : tableName : "( \\rec -> " : finalQueryList)
+  let finalList = (opName : (T.unpack (T.toLower (T.pack (tableName)))) : "( \\rec -> " : finalQueryList)
   let finalString = replaceChar ']' ')' $ replaceChar '[' '(' $ replaceChar ',' ' ' (unwords finalList)
-
-
 
   putStrLn finalString
   where

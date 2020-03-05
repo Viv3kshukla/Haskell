@@ -34,22 +34,21 @@ transform = do
 
 --  putStrLn $ "logging out the splitQString " ++ (show splitQString)
 
-  let queryList = map (func mp) (words repCntString)
-
+--  let queryList = map (func mp) (words repCntString)
+  let queryList = words repCntString
   putStrLn $ "logging out the finalList " ++ (unwords queryList)
-
-
 
 --  putStrLn $ "logging out the list " ++ (show queryList)
   let newQueryList = processAndOr "And" queryList
-  putStrLn $ "logging out the newQueryList " ++ (show newQueryList)
+  let finalQueryList = map (func mp) (newQueryList)
+  putStrLn $ "logging out the newQueryList " ++ (show finalQueryList)
 --  let finalList = (opName : tableName : "$ \\rec -> " : queryList)
-  let finalList = (opName : tableName : "$ \\rec -> " : newQueryList)
+  let finalList = (opName : tableName : "( \\rec -> " : finalQueryList)
+  let finalString = replaceChar ']' ')' $ replaceChar '[' '(' $ replaceChar ',' ' ' (unwords finalList)
 
 
 
-
-  putStrLn $ unwords finalList
+  putStrLn finalString
   where
 
     fetchOpName :: String -> String
@@ -60,8 +59,8 @@ transform = do
 
     getQueryString :: String -> String
     getQueryString str = let list = tail $ dropWhile (/= '[') (str)
-                             newList = takeWhile (/= ']') list
-                         in (newList)
+--                             newList = takeWhile (/= ']') list
+                         in (list)
 
 
 

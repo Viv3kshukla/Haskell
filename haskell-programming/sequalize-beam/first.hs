@@ -11,31 +11,44 @@ transform = do
   str <- readFile "file.txt"
   putStrLn str
 
-  let keys = ["/\\", "String", "Int", "where_",":=","==?",",","\"","WHERE"]
-  let values = ["==.","B.val_","B.val_", "\\rec","->", "==.","&&.","","rec"]
+  let keys = ["/\\", "String", "Int", "where_",":=","==?","\"","WHERE", "And","AND","and","Or"]
+  let values = ["==.","B.val_","B.val_", "\\rec","->", "==.","","rec","&&.","&&.","&&.","||."]
 
   let keyValueList = zip keys values
   let mp = Map.fromList keyValueList
   putStrLn $ show (words str)
   let opName = fetchOpName str
-  putStrLn $ "logging out the op name " ++ opName
+
   let tableName = fetchTableName str
-  putStrLn $ "logging out the table name " ++ tableName
+
   let queryTail = drop 2 (words str)
-  putStrLn $ "logging out the queryTail name " ++ (show queryTail)
+
   let newStr = unwords $ takeWhile (/= "::") (queryTail)
-  putStrLn $ "logging out the newStr name " ++ (newStr)
+
   let queryString = getQueryString newStr
-  putStrLn $ "logging out the queryString " ++ queryString
+
   let repCntString = replaceCharCnt '"' 1 queryString
 --  let repString  = replaceChar '"' ' ' queryString
 --  let splitQString = splitQueryString "\"" newStr
 
-  putStrLn $ "logging out the repCntString " ++ repCntString
+
 --  putStrLn $ "logging out the splitQString " ++ (show splitQString)
 
   let queryList = map (func mp) (words repCntString)
-  let finalList = (opName : tableName : "$ \\rec -> " : queryList)
+
+  putStrLn $ "logging out the finalList " ++ (unwords queryList)
+
+
+
+--  putStrLn $ "logging out the list " ++ (show queryList)
+  let newQueryList = processAndOr "And" queryList
+  putStrLn $ "logging out the newQueryList " ++ (show newQueryList)
+--  let finalList = (opName : tableName : "$ \\rec -> " : queryList)
+  let finalList = (opName : tableName : "$ \\rec -> " : newQueryList)
+
+
+
+
   putStrLn $ unwords finalList
   where
 
@@ -49,6 +62,17 @@ transform = do
     getQueryString str = let list = tail $ dropWhile (/= '[') (str)
                              newList = takeWhile (/= ']') list
                          in (newList)
+
+
+
+    processAndOr :: String -> [String] -> [String]
+    processAndOr opr [] = []
+    processAndOr opr (x:[]) = [x]
+    processAndOr opr (x:y:xs)
+      | (last y) == ',' = (x : y : opr : (processAndOr opr xs ))
+      | (head y) == '[' = (y : (processAndOr x xs ))
+      | otherwise = (x : y : processAndOr opr (xs))
+
 
     replaceChar :: Char -> Char -> String -> String
     replaceChar rep with [] = []
